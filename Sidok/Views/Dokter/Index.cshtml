@@ -1,0 +1,48 @@
+﻿@model IEnumerable<Entity.DokterModel>
+
+<h1>Dokter</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Nama</th>
+            <th>NIP</th>
+            <th>NIK</th>
+            <th>Jenis Kelamin</th>
+            <th>Spesialisasi</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.Id">@item.Nama</a>
+                </td>
+                <td>@item.Nip</td>
+                <td>@item.Nik</td>
+                <td>@item.JenisKelaminDeskripsi</td>
+                <td>
+                    @if (item.SpesialisasiData != null && item.SpesialisasiData.Any())
+                    {
+                        @string.Join(", ", item.SpesialisasiData)
+                    }
+                    else
+                    {
+                        <span>No Specialization</span>
+                    }
+                </td>
+                <td>
+                    <a asp-action="CreateJadwal" asp-route-id="@item.Id">Tambah Jadwal</a> |
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

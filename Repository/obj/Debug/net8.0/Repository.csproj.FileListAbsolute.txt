@@ -1,0 +1,15 @@
+C:\Users\Pemakai\source\repos\Sidok\repository\bin\Debug\net8.0\repository.deps.json
+C:\Users\Pemakai\source\repos\Sidok\Repository\bin\Debug\net8.0\repository.dll
+C:\Users\Pemakai\source\repos\Sidok\Repository\bin\Debug\net8.0\repository.pdb
+C:\Users\Pemakai\source\repos\Sidok\Repository\bin\Debug\net8.0\Entity.dll
+C:\Users\Pemakai\source\repos\Sidok\Repository\bin\Debug\net8.0\Entity.pdb
+C:\Users\Pemakai\source\repos\Sidok\Repository\obj\Debug\net8.0\repository.csproj.AssemblyReference.cache
+C:\Users\Pemakai\source\repos\Sidok\Repository\obj\Debug\net8.0\repository.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Pemakai\source\repos\Sidok\Repository\obj\Debug\net8.0\repository.AssemblyInfoInputs.cache
+C:\Users\Pemakai\source\repos\Sidok\Repository\obj\Debug\net8.0\repository.AssemblyInfo.cs
+C:\Users\Pemakai\source\repos\Sidok\Repository\obj\Debug\net8.0\repository.csproj.CoreCompileInputs.cache
+C:\Users\Pemakai\source\repos\Sidok\repository\obj\Debug\net8.0\repository.csproj.Up2Date
+C:\Users\Pemakai\source\repos\Sidok\Repository\obj\Debug\net8.0\repository.dll
+C:\Users\Pemakai\source\repos\Sidok\Repository\obj\Debug\net8.0\refint\repository.dll
+C:\Users\Pemakai\source\repos\Sidok\Repository\obj\Debug\net8.0\repository.pdb
+C:\Users\Pemakai\source\repos\Sidok\repository\obj\Debug\net8.0\ref\repository.dll

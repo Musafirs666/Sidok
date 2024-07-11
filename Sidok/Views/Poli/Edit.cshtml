@@ -1,0 +1,25 @@
+﻿@model Entity.PoliModel
+
+@{
+    ViewData["Title"] = "Edit Dokter";
+}
+
+<h1>Edit Dokter</h1>
+
+<form asp-action="Edit">
+    <div class="form-group">
+        <label asp-for="nama_poli" class="control-label"></label>
+        <input asp-for="nama_poli" class="form-control" />
+        <span asp-validation-for="nama_poli" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="lokasi" class="control-label"></label>
+        <input asp-for="lokasi" class="form-control" />
+        <span asp-validation-for="lokasi" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Edit" class="btn btn-primary" />
+    </div>
+    <a asp-action="Index" class="btn btn-secondary">Batal</a>
+</form>
+

@@ -1,0 +1,74 @@
+﻿@model Entity.DokterJadwalViewModel
+
+<h1>Create Jadwal Dokter</h1>
+
+<h4>Jadwal Dokter</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="CreateJadwal" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Dokter.Id" />
+            <div class="form-group">
+                <label asp-for="Dokter.Nama" class="control-label"></label>
+                <input asp-for="Dokter.Nama" class="form-control" disabled />
+                <span asp-validation-for="Dokter.Nama" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="SelectedPoliId" class="control-label"></label>
+                @Html.DropDownListFor(model => model.SelectedPoliId, ViewBag.PoliList as SelectList, "-- Pilih Poli --", new { @class = "form-control", id = "selectPoli" })
+                <span asp-validation-for="SelectedPoliId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="SelectedHari" class="control-label">Hari</label>
+                <select asp-for="SelectedHari" class="form-control">
+                    <option value="Senin">Senin</option>
+                    <option value="Selasa">Selasa</option>
+                    <option value="Rabu">Rabu</option>
+                    <option value="Kamis">Kamis</option>
+                    <option value="Jumat">Jumat</option>
+                </select>
+                <span asp-validation-for="SelectedHari" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="CreateJadwal" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<h4>Daftar Jadwal Dokter</h4>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Nama Dokter</th>
+            <th>Hari</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var jadwal in Model.JadwalDokter)
+        {
+            <tr>
+                <td>@jadwal.NamaDokter</td>
+                <td>@jadwal.Hari</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+
+    <script>
+        $(document).ready(function () {
+            $('#selectPoli').select2({
+                placeholder: "-- Pilih Poli --",
+                allowClear: true
+            });
+        });
+    </script>
+}

@@ -1,0 +1,58 @@
+﻿@model Entity.DokterByPoliViewModel
+
+<h4>Dokter By Poli</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="GetDokterByPoliId" method="get">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="PoliId" class="control-label"></label>
+                @Html.DropDownListFor(model => model.PoliId, ViewBag.PoliList as SelectList, "-- Pilih Poli --", new { @class = "form-control", id = "selectPoli" })
+                <span asp-validation-for="PoliId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="GetDokterByPoli" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    @if (ViewBag.DokterList != null)
+    {
+        <h4>Hasil Pencarian Dokter</h4>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Nama Dokter</th>
+                    <th>Spesialisasi</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var dokter in ViewBag.DokterList)
+                {
+                    <tr>
+                        <td>@dokter.Nama</td>
+                        <td>@string.Join(", ", dokter.SpesialisasiData)</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+
+    <script>
+        $(document).ready(function () {
+            $('#selectPoli').select2({
+                placeholder: "-- Pilih Poli --",
+                allowClear: true
+            });
+        });
+    </script>
+}

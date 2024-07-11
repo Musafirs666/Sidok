@@ -1,0 +1,61 @@
+﻿@model Entity.DokterModel
+
+<h1>Detail Dokter</h1>
+
+<div>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            Nama
+        </dt>
+        <dd class="col-sm-10">
+            @Model.Nama
+        </dd>
+        <dt class="col-sm-2">
+            NIP
+        </dt>
+        <dd class="col-sm-10">
+            @Model.Nip
+        </dd>
+        <dt class="col-sm-2">
+            NIK
+        </dt>
+        <dd class="col-sm-10">
+            @Model.Nik
+        </dd>
+        <dt class="col-sm-2">
+            Jenis Kelamin
+        </dt>
+        <dd class="col-sm-10">
+            @Model.JenisKelaminDeskripsi
+        </dd>
+        <dt class="col-sm-2">
+            Tanggal Lahir
+        </dt>
+        <dd class="col-sm-10">
+            @Model.tanggal_lahir.ToString("yyyy-MM-dd")
+        </dd>
+        <dt class="col-sm-2">
+            Tempat Lahir
+        </dt>
+        <dd class="col-sm-10">
+            @Model.tempat_lahir
+        </dd>
+        <dt class="col-sm-2">
+            Spesialisasi
+        </dt>
+        <dd class="col-sm-10">
+            @if (Model.SpesialisasiData != null && Model.SpesialisasiData.Any())
+            {
+                @string.Join(", ", Model.SpesialisasiData)
+            }
+            else
+            {
+                <span>No Specialization</span>
+            }
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>

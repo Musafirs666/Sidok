@@ -1,0 +1,67 @@
+﻿@model Entity.DokterModel
+
+<h1>Create Dokter</h1>
+
+<h4>Dokter</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group">
+                <label asp-for="Nik" class="control-label"></label>
+                <input asp-for="Nik" class="form-control" />
+                <span asp-validation-for="Nik" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Nama" class="control-label"></label>
+                <input asp-for="Nama" class="form-control" />
+                <span asp-validation-for="Nama" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="tanggal_lahir" class="control-label"></label>
+                <input asp-for="tanggal_lahir" type="date" class="form-control" />
+                <span asp-validation-for="tanggal_lahir" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="jenis_kelamin" class="control-label"></label>
+                <select asp-for="jenis_kelamin" class="form-control">
+                    <option value="L">Laki-laki</option>
+                    <option value="P">Perempuan</option>
+                </select>
+                <span asp-validation-for="jenis_kelamin" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="tempat_lahir" class="control-label"></label>
+                <input asp-for="tempat_lahir" class="form-control" />
+                <span asp-validation-for="tempat_lahir" class="text-danger"></span>
+            </div>
+            <!-- Dropdown for Spesialisasi -->
+            <div class="form-group">
+                <label asp-for="Spesialisasi" class="control-label"></label>
+                @Html.DropDownListFor(model => model.Spesialisasi, ViewBag.SpesialisasiList as SelectList, "-- Pilih Spesialisasi --", new { @class = "form-control", id = "selectSpesialisasi" })
+                <span asp-validation-for="Spesialisasi" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+
+    <script>
+        $(document).ready(function () {
+            $('#selectSpesialisasi').select2({
+                placeholder: "-- Pilih Spesialisasi --",
+                allowClear: true
+            });
+        });
+    </script>
+}
