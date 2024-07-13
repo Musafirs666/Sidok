@@ -70,12 +70,34 @@ namespace Repository
         {
             using IDbConnection conn = new SqlConnection(_connectionString);
 
-            var sql = @"DELETE FROM poli WHERE id = @id";
+            var sqlDeleteBertugasDi = @"DELETE FROM bertugas_di WHERE poli_id = @id";
+            var sqlDeletePoli = @"DELETE FROM poli WHERE id = @id";
 
-            // Menggunakan Dapper untuk eksekusi query delete
-            var affectedRows = await conn.ExecuteAsync(sql, new { id });
+            conn.Open();
+            using var transaction = conn.BeginTransaction();
 
-            return affectedRows > 0;
+            try
+            {
+                // Menghapus referensi di tabel bertugas_di
+                await conn.ExecuteAsync(sqlDeleteBertugasDi, new { id }, transaction);
+
+                // Menghapus data di tabel poli
+                var affectedRows = await conn.ExecuteAsync(sqlDeletePoli, new { id }, transaction);
+
+                transaction.Commit();
+                return affectedRows > 0;
+            }
+            catch (Exception)
+            {
+                transaction.Rollback();
+                throw;
+            }
+            finally
+            {
+                conn.Close();
+            }
         }
-    }
+    
+
+}
 }

@@ -13,16 +13,32 @@ namespace Repository
 {
     public class DokterRepository : IDokterRepository
     {
-        private readonly string _connectionString;
+        private readonly IDbConnection _dbConnection;
 
-        public DokterRepository(IConfiguration configuration)
+        public DokterRepository(IDbConnection dbConnection)
         {
-            _connectionString = configuration.GetConnectionString("DefaultConnection");
+            _dbConnection = dbConnection ?? throw new ArgumentNullException(nameof(dbConnection));
+        }
+
+        public async Task<List<DokterModel>> GetDoktersByIdsAsync(IEnumerable<int> ids)
+        {
+            var sql = "SELECT * FROM Dokter WHERE Id IN @Ids";
+            var result = await _dbConnection.QueryAsync<DokterModel>(sql, new { Ids = ids });
+            return result.ToList();
+        }
+
+        public async Task<List<DokterOpensearchModel>> SearchDokterByNameAsync(string searchTerm)
+        {
+            // Lakukan pencarian di database SQL Server
+            var query = "SELECT * FROM dokter WHERE Nama LIKE @searchTerm";
+            var parameters = new { searchTerm = $"%{searchTerm}%" };
+            var result = await _dbConnection.QueryAsync<DokterOpensearchModel>(query, parameters);
+
+            return result.AsList();
         }
 
         public async Task<IEnumerable<DokterModel>> GetAllAsync()
         {
-            using IDbConnection conn = new SqlConnection(_connectionString);
             var dokterDictionary = new Dictionary<int, DokterModel>();
 
             var sql = @"
@@ -31,7 +47,7 @@ namespace Repository
                 LEFT JOIN dokter_spesialisasi ds ON d.Id = ds.dokter_id
                 LEFT JOIN spesialisasi s ON ds.spesialisasi_id = s.id";
 
-            var result = await conn.QueryAsync<DokterModel, string, DokterModel>(sql, (dokter, spesialisasiNama) =>
+            var result = await _dbConnection.QueryAsync<DokterModel, string, DokterModel>(sql, (dokter, spesialisasiNama) =>
             {
                 if (!dokterDictionary.TryGetValue(dokter.Id, out var currentDokter))
                 {
@@ -51,7 +67,6 @@ namespace Repository
 
         public async Task<DokterModel> GetByIdAsync(int id)
         {
-            using IDbConnection conn = new SqlConnection(_connectionString);
             var dokterDictionary = new Dictionary<int, DokterModel>();
 
             var sql = @"
@@ -61,7 +76,7 @@ namespace Repository
                 LEFT JOIN spesialisasi s ON ds.spesialisasi_id = s.id
                 WHERE d.Id = @Id";
 
-            var result = await conn.QueryAsync<DokterModel, string, DokterModel>(sql, (dokter, spesialisasiNama) =>
+            var result = await _dbConnection.QueryAsync<DokterModel, string, DokterModel>(sql, (dokter, spesialisasiNama) =>
             {
                 if (!dokterDictionary.TryGetValue(dokter.Id, out var currentDokter))
                 {
@@ -81,53 +96,46 @@ namespace Repository
 
         public async Task<IEnumerable<SpesialisasiModel>> GetSpesialisasiByDokterIdAsync(int dokterId)
         {
-            using IDbConnection conn = new SqlConnection(_connectionString);
             var query = @"
                 SELECT s.*
                 FROM spesialisasi s
                 INNER JOIN dokter_spesialisasi ds ON s.Id = ds.spesialisasi_id
                 WHERE ds.dokter_id = @DokterId";
-            return await conn.QueryAsync<SpesialisasiModel>(query, new { DokterId = dokterId });
+            return await _dbConnection.QueryAsync<SpesialisasiModel>(query, new { DokterId = dokterId });
         }
 
         public async Task AddAsync(DokterModel dokter)
         {
-            using IDbConnection conn = new SqlConnection(_connectionString);
-            conn.Open();
-
             // Generate NIP unik berdasarkan aturan
-            dokter.Nip = await GenerateUniqueNipAsync(dokter, conn);
+            dokter.Nip = await GenerateUniqueNipAsync(dokter);
 
             var sqlDokter = @"
                 INSERT INTO dokter (nip, nik, nama, tanggal_lahir, jenis_kelamin, tempat_lahir)
                 VALUES (@Nip, @Nik, @Nama, @tanggal_lahir, @jenis_kelamin, @tempat_lahir);
                 SELECT CAST(SCOPE_IDENTITY() AS INT)";
-            var idDokter = await conn.ExecuteScalarAsync<int>(sqlDokter, dokter);
+            var idDokter = await _dbConnection.ExecuteScalarAsync<int>(sqlDokter, dokter);
 
             foreach (var spesialisasiId in dokter.Spesialisasi)
             {
                 var sqlDokterSpesialisasi = @"
                     INSERT INTO dokter_spesialisasi (dokter_id, spesialisasi_id)
                     VALUES (@IdDokter, @IdSpesialisasi)";
-                await conn.ExecuteAsync(sqlDokterSpesialisasi, new { IdDokter = idDokter, IdSpesialisasi = spesialisasiId });
+                await _dbConnection.ExecuteAsync(sqlDokterSpesialisasi, new { IdDokter = idDokter, IdSpesialisasi = spesialisasiId });
             }
         }
 
         public async Task UpdateAsync(DokterModel dokter)
         {
-            using IDbConnection conn = new SqlConnection(_connectionString);
-            conn.Open();
-
             var sqlDokter = @"
                 UPDATE dokter
                 SET nama = @Nama, tanggal_lahir = @tanggal_lahir,
                     jenis_kelamin = @jenis_kelamin, tempat_lahir = @tempat_lahir
                 WHERE Id = @Id";
-            await conn.ExecuteAsync(sqlDokter, dokter);
+            await _dbConnection.ExecuteAsync(sqlDokter, dokter);
 
             var sqlDeleteSpesialisasi = @"
                 DELETE FROM dokter_spesialisasi WHERE dokter_id = @Id";
-            await conn.ExecuteAsync(sqlDeleteSpesialisasi, new { Id = dokter.Id });
+            await _dbConnection.ExecuteAsync(sqlDeleteSpesialisasi, new { Id = dokter.Id });
 
             if (dokter.Spesialisasi != null)
             {
@@ -136,32 +144,45 @@ namespace Repository
                     var sqlInsertSpesialisasi = @"
                         INSERT INTO dokter_spesialisasi (dokter_id, spesialisasi_id)
                         VALUES (@Id, @SpesialisasiId)";
-                    await conn.ExecuteAsync(sqlInsertSpesialisasi, new { Id = dokter.Id, SpesialisasiId = spesialisasiId });
+                    await _dbConnection.ExecuteAsync(sqlInsertSpesialisasi, new { Id = dokter.Id, SpesialisasiId = spesialisasiId });
                 }
             }
         }
 
         public async Task DeleteAsync(int id)
         {
-            using IDbConnection conn = new SqlConnection(_connectionString);
-            conn.Open();
+            using var transaction = _dbConnection.BeginTransaction();
 
-            var sqlDeleteSpesialisasi = @"
-                DELETE FROM dokter_spesialisasi WHERE dokter_id = @Id";
-            await conn.ExecuteAsync(sqlDeleteSpesialisasi, new { Id = id });
+            try
+            {
+                // Menghapus referensi dari tabel dokter_spesialisasi
+                var sqlDeleteSpesialisasi = @"DELETE FROM dokter_spesialisasi WHERE dokter_id = @Id";
+                await _dbConnection.ExecuteAsync(sqlDeleteSpesialisasi, new { Id = id }, transaction);
 
-            var sqlDeleteDokter = @"
-                DELETE FROM dokter WHERE Id = @Id";
-            await conn.ExecuteAsync(sqlDeleteDokter, new { Id = id });
+                // Menghapus referensi dari tabel bertugas_di
+                var sqlDeleteBertugasDi = @"DELETE FROM bertugas_di WHERE dokter_id = @Id";
+                await _dbConnection.ExecuteAsync(sqlDeleteBertugasDi, new { Id = id }, transaction);
+
+                // Menghapus entri dari tabel dokter
+                var sqlDeleteDokter = @"DELETE FROM dokter WHERE Id = @Id";
+                await _dbConnection.ExecuteAsync(sqlDeleteDokter, new { Id = id }, transaction);
+
+                transaction.Commit();
+            }
+            catch (Exception)
+            {
+                transaction.Rollback();
+                throw;
+            }
         }
 
-        private async Task<bool> NipExistsAsync(string nip, IDbConnection conn)
+        private async Task<bool> NipExistsAsync(string nip)
         {
             var sql = "SELECT COUNT(1) FROM dokter WHERE nip = @Nip";
-            return await conn.ExecuteScalarAsync<bool>(sql, new { Nip = nip });
+            return await _dbConnection.ExecuteScalarAsync<bool>(sql, new { Nip = nip });
         }
 
-        private async Task<string> GenerateUniqueNipAsync(DokterModel dokter, IDbConnection conn)
+        private async Task<string> GenerateUniqueNipAsync(DokterModel dokter)
         {
             string nip;
             bool exists;
@@ -174,7 +195,7 @@ namespace Repository
                 var randomPart = new string(Enumerable.Range(0, 2).Select(_ => (char)('A' + new Random().Next(0, 26))).ToArray());
 
                 nip = yearPart + birthDatePart + genderPart + randomPart;
-                exists = await NipExistsAsync(nip, conn);
+                exists = await NipExistsAsync(nip);
             }
             while (exists);
 
@@ -183,26 +204,22 @@ namespace Repository
 
         public async Task AddJadwalAsync(BertugasDiModel model)
         {
-            using IDbConnection conn = new SqlConnection(_connectionString);
             var sql = @"
                 INSERT INTO bertugas_di (dokter_id, poli_id, hari)
                 VALUES (@DokterId, @PoliId, @Hari)";
-            await conn.ExecuteAsync(sql, model);
+            await _dbConnection.ExecuteAsync(sql, model);
         }
 
         public async Task<IEnumerable<BertugasDiModel>> GetJadwalListAsync(int dokterId)
         {
-            using IDbConnection conn = new SqlConnection(_connectionString);
             var sql = @"
-        SELECT bd.dokter_id AS DokterId, bd.poli_id AS PoliId, bd.hari AS Hari, d.nama AS NamaDokter
-        FROM bertugas_di bd
-        INNER JOIN dokter d ON bd.dokter_id = d.Id
-        WHERE bd.dokter_id = @DokterId";
+                SELECT bd.dokter_id AS DokterId, bd.poli_id AS PoliId, bd.hari AS Hari, d.nama AS NamaDokter
+                FROM bertugas_di bd
+                INNER JOIN dokter d ON bd.dokter_id = d.Id
+                WHERE bd.dokter_id = @DokterId";
 
-            var result = await conn.QueryAsync<BertugasDiModel>(sql, new { DokterId = dokterId });
+            var result = await _dbConnection.QueryAsync<BertugasDiModel>(sql, new { DokterId = dokterId });
             return result;
         }
-
-
     }
 }

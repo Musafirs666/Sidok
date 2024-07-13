@@ -17,17 +17,17 @@
         <input asp-for="Nik" class="form-control" disabled/>
     </div>
     <div class="form-group">
-        <label asp-for="tanggal_lahir" class="control-label"></label>
+        <label class="control-label"> Tanggal Lahir</label>
         <input asp-for="tanggal_lahir" type="date" class="form-control" />
         <span asp-validation-for="tanggal_lahir" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label asp-for="tempat_lahir" class="control-label"></label>
+        <label class="control-label">Tempat Lahir</label>
         <input asp-for="tempat_lahir" class="form-control" />
         <span asp-validation-for="tempat_lahir" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label asp-for="jenis_kelamin" class="control-label"></label>
+        <label class="control-label">Jenis Kelamin</label>
         @Html.DropDownListFor(model => model.jenis_kelamin, new SelectList(
                  new List<SelectListItem>
         {
