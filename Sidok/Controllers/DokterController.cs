@@ -1,20 +1,19 @@
 using Microsoft.AspNetCore.Components.Routing;
 using Microsoft.AspNetCore.Mvc;
-using Repository;
 using Entity;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Service.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using Service;
 
 
 namespace Sidok.Controllers
 {
     public class DokterController : Controller
     {
-        private readonly IDokterService _dokterService;
-        private readonly ISpesialisasiService _spesialisasiService; // Add this field
-        private readonly IPoliService _poliService; // Add this field
+        // add service
+        private readonly IDokterService _dokterService; 
+        private readonly ISpesialisasiService _spesialisasiService;
+        private readonly IPoliService _poliService;
 
         public DokterController(IDokterService dokterService, ISpesialisasiService spesialisasiService, IPoliService poliService)
         {
@@ -22,7 +21,34 @@ namespace Sidok.Controllers
             _spesialisasiService = spesialisasiService;
             _poliService = poliService;
         }
+       
+        //Create New JadwalDokter
+        [HttpPost]
+        public async Task<IActionResult> CreateJadwal(DokterJadwalViewModel model)
+        {
 
+            try
+            {
+                var bertugasDiModel = new BertugasDiModel
+                {
+                    DokterId = model.Dokter.Id,
+                    PoliId = model.SelectedPoliId,
+                    Hari = model.SelectedHari
+                };
+
+                // repo dokter
+                await _dokterService.AddJadwalAsync(bertugasDiModel);
+
+                return RedirectToAction("Index");
+            }
+            catch (Exception ex)
+            {
+                // exception
+                ModelState.AddModelError(string.Empty, $"Error: {ex.Message}");
+            }
+
+            return View(model);
+        }
         [HttpGet]
         public async Task<IActionResult> CreateJadwal(int id)
         {
@@ -56,16 +82,16 @@ namespace Sidok.Controllers
             return View(viewModel);
         }
 
-
         public async Task<IActionResult> Index()
         {
-            // Retrieve all dokter asynchronously
+            // get semua data dokter
             var dokterList = await _dokterService.GetAllAsync();
 
-            // Pass the dokterList to the view
+            // lempar ke list
             return View(dokterList);
         }
 
+        // get all data spesialist for dropdownList
         public IActionResult Create()
         {
             var spesialisasiListTask = _spesialisasiService.GetAllAsync();
@@ -178,35 +204,6 @@ namespace Sidok.Controllers
             await _dokterService.DeleteAsync(id);
             return RedirectToAction(nameof(Index));
         }
-        [HttpPost]
-        public async Task<IActionResult> CreateJadwal(DokterJadwalViewModel model)
-        {
-            
-                try
-                {
-                    var bertugasDiModel = new BertugasDiModel
-                    {
-                        DokterId = model.Dokter.Id,
-                        PoliId = model.SelectedPoliId,
-                        Hari = model.SelectedHari
-                    };
-
-                    // Simpan ke repository bertugasDi
-                    await _dokterService.AddJadwalAsync(bertugasDiModel);
-
-                    return RedirectToAction("Index");
-                }
-                catch (Exception ex)
-                {
-                    // Handle exception if needed
-                    ModelState.AddModelError(string.Empty, $"Error: {ex.Message}");
-                }
-            
-            // Kembalikan view dengan model yang sama
-            return View(model);
-        }
-
-
 
     }
 }

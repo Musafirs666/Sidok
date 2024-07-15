@@ -1,8 +1,16 @@
 {
   "version": 2,
-  "dgSpecHash": "p3wAHL6P4nE=",
+  "dgSpecHash": "lfzah0tCag0=",
   "success": true,
   "projectFilePath": "C:\\Users\\Pemakai\\source\\repos\\Sidok\\Entity\\Entity.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\Pemakai\\.nuget\\packages\\microsoft.csharp\\4.7.0\\microsoft.csharp.4.7.0.nupkg.sha512",
+    "C:\\Users\\Pemakai\\.nuget\\packages\\newtonsoft.json\\13.0.3\\newtonsoft.json.13.0.3.nupkg.sha512",
+    "C:\\Users\\Pemakai\\.nuget\\packages\\opensearch.client\\1.7.1\\opensearch.client.1.7.1.nupkg.sha512",
+    "C:\\Users\\Pemakai\\.nuget\\packages\\opensearch.net\\1.7.1\\opensearch.net.1.7.1.nupkg.sha512",
+    "C:\\Users\\Pemakai\\.nuget\\packages\\system.buffers\\4.5.1\\system.buffers.4.5.1.nupkg.sha512",
+    "C:\\Users\\Pemakai\\.nuget\\packages\\system.diagnostics.diagnosticsource\\6.0.1\\system.diagnostics.diagnosticsource.6.0.1.nupkg.sha512",
+    "C:\\Users\\Pemakai\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\6.0.0\\system.runtime.compilerservices.unsafe.6.0.0.nupkg.sha512"
+  ],
   "logs": []
 }

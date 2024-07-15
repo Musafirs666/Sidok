@@ -1,0 +1,48 @@
+﻿@model List<Entity.DokterOpensearchModel>
+
+@{
+    ViewData["Title"] = "Search Results";
+}
+
+<h1>Search Results</h1>
+
+<form method="post" asp-action="Index">
+    <input type="text" name="searchTerm" placeholder="Search...">
+    <button type="submit">Search</button>
+</form>
+
+@if (Model != null && Model.Count > 0)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Nama</th>
+                <th>NIP</th>
+                <th>NIK</th>
+                <th>Jenis Kelamin</th>
+                <th>Spesialisasi</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                       @item.Nama
+                    </td>
+                    <td>@item.Nip</td>
+                    <td>@item.Nik</td>
+                    <td>@item.Jenis_Kelamin</td>
+                    <td>@string.Join(", ", item.Spesialisasi)</td>
+                    <td>
+
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No results found.</p>
+}

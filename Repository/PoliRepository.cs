@@ -36,7 +36,6 @@ namespace Repository
 
             var sql = @"SELECT * FROM poli WHERE id = @id";
 
-            // Menggunakan Dapper untuk eksekusi query
             var result = await conn.QuerySingleOrDefaultAsync<PoliModel>(sql, new { id });
 
             return result;
@@ -48,7 +47,6 @@ namespace Repository
 
             var sql = @"INSERT INTO poli (nama_poli, lokasi) VALUES (@nama_poli, @lokasi)";
 
-            // Menggunakan Dapper untuk eksekusi query insert
             var affectedRows = await conn.ExecuteAsync(sql, new { poli.nama_poli, poli.lokasi });
 
             return affectedRows > 0;
@@ -60,7 +58,6 @@ namespace Repository
 
             var sql = @"UPDATE poli SET nama_poli = @nama_poli, lokasi = @lokasi WHERE id = @id";
 
-            // Menggunakan Dapper untuk eksekusi query update
             var affectedRows = await conn.ExecuteAsync(sql, new { poli.nama_poli, poli.lokasi, poli.id });
 
             return affectedRows > 0;
@@ -70,12 +67,34 @@ namespace Repository
         {
             using IDbConnection conn = new SqlConnection(_connectionString);
 
-            var sql = @"DELETE FROM poli WHERE id = @id";
+            var sqlDeleteBertugasDi = @"DELETE FROM bertugas_di WHERE poli_id = @id";
+            var sqlDeletePoli = @"DELETE FROM poli WHERE id = @id";
 
-            // Menggunakan Dapper untuk eksekusi query delete
-            var affectedRows = await conn.ExecuteAsync(sql, new { id });
+            conn.Open();
+            using var transaction = conn.BeginTransaction();
 
-            return affectedRows > 0;
+            try
+            {
+                // Menghapus referensi di tabel bertugas_di
+                await conn.ExecuteAsync(sqlDeleteBertugasDi, new { id }, transaction);
+
+                // Menghapus data di tabel poli
+                var affectedRows = await conn.ExecuteAsync(sqlDeletePoli, new { id }, transaction);
+
+                transaction.Commit();
+                return affectedRows > 0;
+            }
+            catch (Exception)
+            {
+                transaction.Rollback();
+                throw;
+            }
+            finally
+            {
+                conn.Close();
+            }
         }
-    }
+    
+
+}
 }
