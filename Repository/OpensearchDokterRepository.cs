@@ -39,19 +39,31 @@ namespace Repository
             return searchResponse.Documents.ToList();
         }
 
+
         public async Task IndexOrUpdateDokterAsync(List<DokterOpensearchModel> dokterDetails)
         {
             // Lakukan index atau update dokumen di OpenSearch
             var bulkResponse = await _client.BulkAsync(b => b
                 .IndexMany(dokterDetails, (descriptor, dokter) => descriptor
-                    .Index("dokter_index") // Ganti dengan nama indeks yang sesuai
-                    .Id(dokter.Id) // Atur ID dokumen jika perlu
+                    .Index("dokter_index") 
+                    .Id(dokter.Id) // Atur ID
                 )
             );
 
             if (!bulkResponse.IsValid)
             {
                 throw new Exception($"Failed to index or update documents: {bulkResponse.OriginalException.Message}");
+            }
+        }
+        public async Task DeleteDokterAsync(int id)
+        {
+            var deleteResponse = await _client.DeleteAsync<DokterOpensearchModel>(id, d => d
+                .Index("dokter_index")
+            );
+
+            if (!deleteResponse.IsValid)
+            {
+                throw new Exception($"Failed to delete document: {deleteResponse.OriginalException.Message}");
             }
         }
     }

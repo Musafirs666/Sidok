@@ -15,17 +15,20 @@ namespace Sidok.Controllers
             _poliService = poliService;
         }
 
+        //index
         public async Task<IActionResult> Index()
         {
             var poliList = await _poliService.GetAllAsync();
             return View(poliList);
         }
 
+        //create
         public IActionResult Create()
         {
             return View();
         }
 
+        //create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(PoliModel poli)
@@ -38,6 +41,8 @@ namespace Sidok.Controllers
             return View(poli);
         }
 
+
+        //edit get data
         public async Task<IActionResult> Edit(int id)
         {
             var poli = await _poliService.GetByIdAsync(id);
@@ -48,6 +53,8 @@ namespace Sidok.Controllers
             return View(poli);
         }
 
+
+        //edit post data
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, PoliModel poli)
@@ -65,6 +72,7 @@ namespace Sidok.Controllers
             return View(poli);
         }
 
+        //delete
         public async Task<IActionResult> Delete(int id)
         {
             var poli = await _poliService.GetByIdAsync(id);
@@ -75,6 +83,7 @@ namespace Sidok.Controllers
             return View(poli);
         }
 
+        //delete post
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -83,6 +92,7 @@ namespace Sidok.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        //get details
         public async Task<IActionResult> Details(int id)
         {
             var poli = await _poliService.GetByIdAsync(id);

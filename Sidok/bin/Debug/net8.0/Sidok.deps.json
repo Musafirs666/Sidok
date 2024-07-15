@@ -616,7 +616,7 @@
           "System.Data.SqlClient": "4.8.6"
         },
         "runtime": {
-          "repository.dll": {}
+          "Repository.dll": {}
         }
       },
       "Service/1.0.0": {

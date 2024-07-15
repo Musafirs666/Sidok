@@ -23,6 +23,9 @@ C:\Users\Pemakai\source\repos\Sidok\Sidok\bin\Debug\net8.0\Microsoft.IdentityMod
 C:\Users\Pemakai\source\repos\Sidok\Sidok\bin\Debug\net8.0\Microsoft.IdentityModel.Tokens.dll
 C:\Users\Pemakai\source\repos\Sidok\Sidok\bin\Debug\net8.0\Microsoft.OpenApi.dll
 C:\Users\Pemakai\source\repos\Sidok\Sidok\bin\Debug\net8.0\Microsoft.SqlServer.Server.dll
+C:\Users\Pemakai\source\repos\Sidok\Sidok\bin\Debug\net8.0\Newtonsoft.Json.dll
+C:\Users\Pemakai\source\repos\Sidok\Sidok\bin\Debug\net8.0\OpenSearch.Client.dll
+C:\Users\Pemakai\source\repos\Sidok\Sidok\bin\Debug\net8.0\OpenSearch.Net.dll
 C:\Users\Pemakai\source\repos\Sidok\Sidok\bin\Debug\net8.0\Swashbuckle.AspNetCore.Annotations.dll
 C:\Users\Pemakai\source\repos\Sidok\Sidok\bin\Debug\net8.0\Swashbuckle.AspNetCore.Swagger.dll
 C:\Users\Pemakai\source\repos\Sidok\Sidok\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerGen.dll
@@ -88,6 +91,3 @@ C:\Users\Pemakai\source\repos\Sidok\Sidok\obj\Debug\net8.0\refint\Sidok.dll
 C:\Users\Pemakai\source\repos\Sidok\Sidok\obj\Debug\net8.0\Sidok.pdb
 C:\Users\Pemakai\source\repos\Sidok\Sidok\obj\Debug\net8.0\Sidok.genruntimeconfig.cache
 C:\Users\Pemakai\source\repos\Sidok\Sidok\obj\Debug\net8.0\ref\Sidok.dll
-C:\Users\Pemakai\source\repos\Sidok\Sidok\bin\Debug\net8.0\Newtonsoft.Json.dll
-C:\Users\Pemakai\source\repos\Sidok\Sidok\bin\Debug\net8.0\OpenSearch.Client.dll
-C:\Users\Pemakai\source\repos\Sidok\Sidok\bin\Debug\net8.0\OpenSearch.Net.dll

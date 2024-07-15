@@ -1,7 +1,3 @@
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Configuration;
 using OpenSearch.Client;
 using Repository;
 using Repository.Interface;
@@ -20,7 +16,7 @@ namespace Sidok
             var builder = WebApplication.CreateBuilder(args);
             var configuration = builder.Configuration;
 
-            // Ambil konfigurasi OpenSearch dari appsettings.json
+            // config opensearch
             var opensearchUrl = configuration["OpenSearch:Url"];
             var username = configuration["OpenSearch:Username"];
             var password = configuration["OpenSearch:Password"];
@@ -33,7 +29,7 @@ namespace Sidok
 
             var openSearchClient = new OpenSearchClient(settings);
 
-            // Add services to the container.
+            // Dep.Injection
             builder.Services.AddSingleton<IOpenSearchClient>(openSearchClient);
             builder.Services.AddControllersWithViews();
             builder.Services.AddScoped<IDokterRepository, DokterRepository>();
@@ -47,7 +43,7 @@ namespace Sidok
             builder.Services.AddScoped<IOpensearchDokterService, OpensearchDokterService>();
             builder.Services.AddScoped<IOpensearchDokterRepository, OpensearchDokterRepository>();
 
-            // Tambahkan konfigurasi untuk Dapper
+            // config dapper
             builder.Services.AddScoped<IDbConnection>(sp =>
                 new SqlConnection(configuration.GetConnectionString("DefaultConnection")));
 

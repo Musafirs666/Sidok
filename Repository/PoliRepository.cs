@@ -36,7 +36,6 @@ namespace Repository
 
             var sql = @"SELECT * FROM poli WHERE id = @id";
 
-            // Menggunakan Dapper untuk eksekusi query
             var result = await conn.QuerySingleOrDefaultAsync<PoliModel>(sql, new { id });
 
             return result;
@@ -48,7 +47,6 @@ namespace Repository
 
             var sql = @"INSERT INTO poli (nama_poli, lokasi) VALUES (@nama_poli, @lokasi)";
 
-            // Menggunakan Dapper untuk eksekusi query insert
             var affectedRows = await conn.ExecuteAsync(sql, new { poli.nama_poli, poli.lokasi });
 
             return affectedRows > 0;
@@ -60,7 +58,6 @@ namespace Repository
 
             var sql = @"UPDATE poli SET nama_poli = @nama_poli, lokasi = @lokasi WHERE id = @id";
 
-            // Menggunakan Dapper untuk eksekusi query update
             var affectedRows = await conn.ExecuteAsync(sql, new { poli.nama_poli, poli.lokasi, poli.id });
 
             return affectedRows > 0;

@@ -1,6 +1,7 @@
 C:\Users\Pemakai\source\repos\Sidok\entity\bin\Debug\net8.0\entity.deps.json
 C:\Users\Pemakai\source\repos\Sidok\Entity\bin\Debug\net8.0\entity.dll
 C:\Users\Pemakai\source\repos\Sidok\Entity\bin\Debug\net8.0\entity.pdb
+C:\Users\Pemakai\source\repos\Sidok\Entity\obj\Debug\net8.0\entity.csproj.AssemblyReference.cache
 C:\Users\Pemakai\source\repos\Sidok\Entity\obj\Debug\net8.0\entity.GeneratedMSBuildEditorConfig.editorconfig
 C:\Users\Pemakai\source\repos\Sidok\Entity\obj\Debug\net8.0\entity.AssemblyInfoInputs.cache
 C:\Users\Pemakai\source\repos\Sidok\Entity\obj\Debug\net8.0\entity.AssemblyInfo.cs
@@ -10,4 +11,3 @@ C:\Users\Pemakai\source\repos\Sidok\Entity\obj\Debug\net8.0\entity.dll
 C:\Users\Pemakai\source\repos\Sidok\Entity\obj\Debug\net8.0\refint\entity.dll
 C:\Users\Pemakai\source\repos\Sidok\Entity\obj\Debug\net8.0\entity.pdb
 C:\Users\Pemakai\source\repos\Sidok\entity\obj\Debug\net8.0\ref\entity.dll
-C:\Users\Pemakai\source\repos\Sidok\Entity\obj\Debug\net8.0\entity.csproj.AssemblyReference.cache

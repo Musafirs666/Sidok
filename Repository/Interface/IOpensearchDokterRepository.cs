@@ -6,5 +6,6 @@ namespace Repository.Interface
     {
         Task<List<DokterOpensearchModel>> SearchDokterAsync(string searchTerm);
         Task IndexOrUpdateDokterAsync(List<DokterOpensearchModel> dokterDetails);
+        Task DeleteDokterAsync(int id);
     }
 }

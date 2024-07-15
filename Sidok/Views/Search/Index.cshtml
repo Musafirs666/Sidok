@@ -20,6 +20,7 @@
                 <th>NIP</th>
                 <th>NIK</th>
                 <th>Jenis Kelamin</th>
+                <th>Spesialisasi</th>
                 <th></th>
             </tr>
         </thead>
@@ -28,18 +29,18 @@
             {
                 <tr>
                     <td>
-                        <a asp-action="Details" asp-route-id="@item.Id">@item.Nama</a>
+                       @item.Nama
                     </td>
                     <td>@item.Nip</td>
                     <td>@item.Nik</td>
                     <td>@item.Jenis_Kelamin</td>
-                    
+                    <td>@string.Join(", ", item.Spesialisasi)</td>
                     <td>
-                        
+
                 </tr>
             }
-    </tbody>
-</table>
+        </tbody>
+    </table>
 }
 else
 {
